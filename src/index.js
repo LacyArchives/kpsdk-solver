@@ -4,7 +4,7 @@ function nameFunction(name, body) {
     [name](...args) {
       return body.apply(this, args)
     }
-  } [name]
+  }[name]
 }
 
 function make_id(len = 32) {
@@ -37,7 +37,7 @@ function build(config) {
           });
           await page.unroute('*/**', router);
         }),
-        response.url();
+          response.url();
       })(), {
         waitUntil: 'commit'
       });
@@ -88,6 +88,7 @@ function build(config) {
       }) => {
         await page.route(url, fn = nameFunction(make_id(), async (route, request) => {
           if (trace_id && (request.headers()[trace_header.toLowerCase()] !== trace_id)) return;
+          if (!request.headers()["client-integrity"]) return;
           resolve({
             request,
             route
@@ -108,7 +109,7 @@ function build(config) {
               }
             } : options
           ]);
-        } catch (_) {};
+        } catch (_) { };
       });
     }
 
